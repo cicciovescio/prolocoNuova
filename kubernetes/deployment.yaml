@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: storytelling
+  labels:
+    app: tdm
+spec:
+  ports:
+    - port: 80
+  selector:
+    app: tdm
+    tier: storytelling
+  type: LoadBalancer 
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: storytelling
+  labels:
+    app: tdm
+spec:
+  selector:
+    matchLabels:
+      app: tdm
+      tier: storytelling
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: tdm
+        tier: storytelling
+    spec:
+      containers:
+      - image: registry.eu-de.bluemix.net/sistabene/tdm-storytelling:0.1
+        imagePullPolicy: Always
+        name: storytelling
+        ports:
+        - containerPort: 80
+          name: storytelling
